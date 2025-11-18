@@ -1,65 +1,96 @@
-import Image from "next/image";
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import HeroBanner from '@/components/HeroBanner';
+import ProductGrid from '@/components/ProductGrid';
+import CategoryGrid from '@/components/CategoryGrid';
+import { Product, Category } from '@/types/product';
+
+// Sample data
+const newProducts: Product[] = [
+  { id: '1', name: 'Váy Cord Evelyn', price: 1990000, image: '', colors: 2, category: 'dresses', isNew: true },
+  { id: '2', name: 'Áo Jersey Trim Imi', price: 1290000, image: '', colors: 2, category: 'tops', isNew: true },
+  { id: '3', name: 'Áo khoác dài Wax', price: 6590000, image: '', category: 'coats', isNew: true },
+  { id: '4', name: 'Áo len Cashmere Lydia', price: 3990000, image: '', colors: 5, category: 'knitwear', isNew: true },
+  { id: '5', name: 'Váy sơ mi dài tay Anita', price: 2990000, image: '', colors: 3, category: 'dresses', isNew: true },
+  { id: '6', name: 'Áo Denim cổ nơ', price: 1990000, image: '', category: 'tops', isNew: true },
+  { id: '7', name: 'Áo khoác Check Stirling', price: 3790000, image: '', colors: 2, category: 'coats', isNew: true },
+  { id: '8', name: 'Áo hoodie Bouclé Raglan', price: 1990000, image: '', colors: 2, category: 'tops', isNew: true },
+];
+
+const categories: Category[] = [
+  { id: '1', name: 'Áo len', image: '', link: '/collections/knitwear' },
+  { id: '2', name: 'Áo khoác', image: '', link: '/collections/coats' },
+  { id: '3', name: 'Đồ dự tiệc', image: '', link: '/collections/party' },
+  { id: '4', name: 'Váy', image: '', link: '/collections/dresses' },
+  { id: '5', name: 'Áo sơ mi', image: '', link: '/collections/tops' },
+  { id: '6', name: 'Trẻ em', image: '', link: '/collections/kids' },
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen">
+      <Header />
+      
+      <main>
+        <HeroBanner />
+        
+        <ProductGrid title="Sản phẩm mới về" products={newProducts} />
+        
+        <CategoryGrid categories={categories} />
+        
+        {/* Editor's Picks Section */}
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+              Gợi ý của biên tập viên
+            </h2>
+            <p className="text-gray-600 text-center mb-8">
+              Những lựa chọn đặc biệt được tuyển chọn kỹ lưỡng
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pick 1 */}
+              <div className="group relative overflow-hidden rounded-lg cursor-pointer">
+                <div className="aspect-video bg-linear-to-br from-red-100 to-pink-100 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <h3 className="text-3xl font-bold text-gray-900 mb-2">Bộ sưu tập Giáng sinh</h3>
+                    <p className="text-gray-700">Từ tiệc tùng đến những buổi gói quà</p>
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all" />
+              </div>
+              
+              {/* Pick 2 */}
+              <div className="group relative overflow-hidden rounded-lg cursor-pointer">
+                <div className="aspect-video bg-linear-to-br from-blue-100 to-teal-100 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <h3 className="text-3xl font-bold text-gray-900 mb-2">Đồ len Alpine</h3>
+                    <p className="text-gray-700">Áo len sang trọng cho mùa đông</p>
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all" />
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Sustainability Section */}
+        <section className="py-16 bg-green-50">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Mua tốt hơn. Mua ít hơn. Mặc nhiều hơn.
+            </h2>
+            <p className="text-gray-700 mb-8 max-w-2xl mx-auto">
+              Chúng tôi cam kết tạo ra những sản phẩm bền vững, chất lượng cao để bạn có thể mặc lâu dài.
+            </p>
+            <button className="bg-gray-900 text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition">
+              Xem mục tiêu bền vững của chúng tôi
+            </button>
+          </div>
+        </section>
       </main>
+      
+      <Footer />
     </div>
   );
 }
