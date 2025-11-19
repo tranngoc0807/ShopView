@@ -7,23 +7,54 @@ import { notFound } from "next/navigation";
 
 interface ProductPageProps {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 }
 
+// Function to extract ID from slug (last part after final hyphen)
+function extractIdFromSlug(slug: string): string | null {
+  const parts = slug.split('-');
+  const lastPart = parts[parts.length - 1];
+  // Check if last part is a number (ID)
+  if (!isNaN(Number(lastPart))) {
+    return lastPart;
+  }
+  return null;
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = await params;
+  const { slug } = await params;
   const supabase = await createClient();
 
-  // Fetch product details from Supabase
-  const { data: product, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .single();
+  // Extract ID from slug
+  const productId = extractIdFromSlug(slug);
+  
+  let product = null;
 
-  // If product not found, show 404
-  if (error || !product) {
+  // Try to find by ID extracted from slug
+  if (productId) {
+    const { data } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", productId)
+      .single();
+    
+    product = data;
+  }
+
+  // If not found, try legacy numeric slug (backward compatibility)
+  if (!product && !isNaN(Number(slug))) {
+    const { data } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", slug)
+      .single();
+    
+    product = data;
+  }
+
+  // If product still not found, show 404
+  if (!product) {
     notFound();
   }
 

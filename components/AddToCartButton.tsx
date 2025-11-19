@@ -57,9 +57,6 @@ export default function AddToCartButton({ product, selectedColor }: AddToCartBut
           'Thêm vào giỏ hàng'
         )}
       </button>
-      <button className="w-full border-2 border-gray-900 text-gray-900 py-4 px-8 rounded-lg font-semibold hover:bg-gray-50 transition">
-        Mua ngay
-      </button>
     </div>
   );
 }

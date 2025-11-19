@@ -14,7 +14,7 @@ export default function HeroBanner() {
               Khám phá phong cách của bạn
             </p>
             <Link
-              href="/collections/winter"
+              href="/"
               className="inline-block bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-gray-800 transition"
             >
               Mua ngay

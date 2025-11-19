@@ -2,18 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import CartDrawer from './CartDrawer';
+import SearchInput from './SearchInput';
 
-export default function Header() {
+interface HeaderProps {
+  onSearchChange?: (query: string) => void;
+}
+
+export default function Header({ onSearchChange }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
   const { totalItems } = useCart();
 
@@ -61,36 +68,52 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/women" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link 
+              href="/women" 
+              className={`font-medium transition ${
+                pathname === '/women' 
+                  ? 'text-gray-900 border-b-2 border-gray-900 pb-1' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
               Nữ
             </Link>
-            <Link href="/men" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link 
+              href="/men" 
+              className={`font-medium transition ${
+                pathname === '/men' 
+                  ? 'text-gray-900 border-b-2 border-gray-900 pb-1' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
               Nam
             </Link>
-            <Link href="/kids" className="text-gray-700 hover:text-gray-900 font-medium">
+            <Link 
+              href="/kids" 
+              className={`font-medium transition ${
+                pathname === '/kids' 
+                  ? 'text-gray-900 border-b-2 border-gray-900 pb-1' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
               Trẻ em
             </Link>
-            <Link href="/new" className="text-red-600 hover:text-red-700 font-medium">
+            <Link 
+              href="/new" 
+              className={`font-medium transition ${
+                pathname === '/new' 
+                  ? 'text-red-700 border-b-2 border-red-600 pb-1' 
+                  : 'text-red-600 hover:text-red-700'
+              }`}
+            >
               Mới về
-            </Link>
-            <Link href="/sale" className="text-gray-700 hover:text-gray-900 font-medium">
-              Sale
             </Link>
           </nav>
 
           {/* Icons */}
           <div className="flex items-center space-x-4">
-            <button className="text-gray-700 hover:text-gray-900 hidden md:block">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
-            <button className="text-gray-700 hover:text-gray-900 hidden md:block">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </button>
-            
+            {/* Search Input */}
+            <SearchInput onSearchChange={onSearchChange || (() => {})} />
             {/* User Menu */}
             {user ? (
               <div className="relative">
@@ -174,19 +197,59 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <nav className="md:hidden pb-4 space-y-2">
-            <Link href="/women" className="block text-gray-700 hover:text-gray-900 py-2">
+            <Link 
+              href="/women" 
+              className={`block py-2 font-medium transition ${
+                pathname === '/women' 
+                  ? 'text-gray-900 font-bold' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Nữ
             </Link>
-            <Link href="/men" className="block text-gray-700 hover:text-gray-900 py-2">
+            <Link 
+              href="/men" 
+              className={`block py-2 font-medium transition ${
+                pathname === '/men' 
+                  ? 'text-gray-900 font-bold' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Nam
             </Link>
-            <Link href="/kids" className="block text-gray-700 hover:text-gray-900 py-2">
+            <Link 
+              href="/kids" 
+              className={`block py-2 font-medium transition ${
+                pathname === '/kids' 
+                  ? 'text-gray-900 font-bold' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Trẻ em
             </Link>
-            <Link href="/new" className="block text-red-600 hover:text-red-700 py-2">
+            <Link 
+              href="/new" 
+              className={`block py-2 font-medium transition ${
+                pathname === '/new' 
+                  ? 'text-red-700 font-bold' 
+                  : 'text-red-600 hover:text-red-700'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Mới về
             </Link>
-            <Link href="/sale" className="block text-gray-700 hover:text-gray-900 py-2">
+            <Link 
+              href="/sale" 
+              className={`block py-2 font-medium transition ${
+                pathname === '/sale' 
+                  ? 'text-gray-900 font-bold' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
               Sale
             </Link>
           </nav>

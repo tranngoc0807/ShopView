@@ -6,13 +6,29 @@ interface ProductCardProps {
   product: Product;
 }
 
+// Function to create URL slug from product name with ID
+function createSlug(name: string, id: string | number): string {
+  const nameSlug = name
+    .toLowerCase()
+    .normalize("NFD") // Normalize Unicode
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/đ/g, "d") // Replace đ with d
+    .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
+    .trim()
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-"); // Remove multiple hyphens
+  
+  return `${nameSlug}-${id}`; // Add ID at the end for uniqueness
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
   // Support both 'image' and 'image_url' fields
   const imageUrl = product.image_url || product.image;
+  const slug = createSlug(product.name, product.id);
   console.log('Product Image URL:', imageUrl);
   
   return (
-    <Link href={`/product/${product.id}`} className="group">
+    <Link href={`/product/${slug}`} className="group">
       <div className="relative overflow-hidden rounded-lg mb-3 bg-gray-100">
         {/* Product image */}
         {imageUrl ? (
