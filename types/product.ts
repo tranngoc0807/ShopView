@@ -1,10 +1,15 @@
 export interface Product {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
-  image: string;
-  colors?: number;
-  category: string;
+  image?: string;
+  image_url?: string; // Added for Supabase compatibility
+  colors?: number | string[];
+  category?: string;
+  gender?: string;
+  age_group?: string;
+  description?: string;
+  created_at?: string;
   isNew?: boolean;
 }
 

@@ -5,13 +5,17 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/contexts/CartContext';
+import CartDrawer from './CartDrawer';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+  const { totalItems } = useCart();
 
   useEffect(() => {
     // Get initial user
@@ -143,13 +147,18 @@ export default function Header() {
               </Link>
             )}
 
-            <button className="text-gray-700 hover:text-gray-900 relative">
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="text-gray-700 hover:text-gray-900 relative"
+            >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                  {totalItems}
+                </span>
+              )}
             </button>
             <button 
               className="md:hidden text-gray-700"
@@ -183,6 +192,9 @@ export default function Header() {
           </nav>
         )}
       </div>
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

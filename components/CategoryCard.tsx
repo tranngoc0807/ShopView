@@ -6,17 +6,28 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category }: CategoryCardProps) {
+  // Map category names to emojis
+  const getEmoji = (name: string) => {
+    const emojiMap: Record<string, string> = {
+      'Áo len': '🧶',
+      'Áo khoác': '🧥',
+      'Váy': '👗',
+      'Áo sơ mi': '👔',
+      'Đồ dự tiệc': '✨',
+      'Trẻ em': '👶',
+      'Nam': '👔',
+      'Nữ': '👗',
+      'Unisex': '👕',
+    };
+    return emojiMap[name] || '👕';
+  };
+
   return (
-    <Link href={category.link} className="group relative overflow-hidden rounded-lg">
-      <div className="aspect-4/5 bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+    <Link href={'/'} className="group relative overflow-hidden rounded-lg">
+      <div className="aspect-square bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center min-h-[200px]">
         <div className="text-center">
           <div className="text-7xl mb-4">
-            {category.name === 'Áo len' && '🧶'}
-            {category.name === 'Áo khoác' && '🧥'}
-            {category.name === 'Váy' && '👗'}
-            {category.name === 'Áo sơ mi' && '👔'}
-            {category.name === 'Đồ dự tiệc' && '✨'}
-            {category.name === 'Trẻ em' && '👶'}
+            {getEmoji(category.name)}
           </div>
           <h3 className="text-2xl font-bold text-gray-900">{category.name}</h3>
         </div>

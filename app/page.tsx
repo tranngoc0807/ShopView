@@ -4,8 +4,9 @@ import HeroBanner from '@/components/HeroBanner';
 import ProductGrid from '@/components/ProductGrid';
 import CategoryGrid from '@/components/CategoryGrid';
 import { Product, Category } from '@/types/product';
+import { createClient } from '@/utils/supabase/server';
 
-// Sample data
+// Sample data for new products (you can also fetch this from Supabase)
 const newProducts: Product[] = [
   { id: '1', name: 'Váy Cord Evelyn', price: 1990000, image: '', colors: 2, category: 'dresses', isNew: true },
   { id: '2', name: 'Áo Jersey Trim Imi', price: 1290000, image: '', colors: 2, category: 'tops', isNew: true },
@@ -17,16 +18,58 @@ const newProducts: Product[] = [
   { id: '8', name: 'Áo hoodie Bouclé Raglan', price: 1990000, image: '', colors: 2, category: 'tops', isNew: true },
 ];
 
-const categories: Category[] = [
-  { id: '1', name: 'Áo len', image: '', link: '/collections/knitwear' },
-  { id: '2', name: 'Áo khoác', image: '', link: '/collections/coats' },
-  { id: '3', name: 'Đồ dự tiệc', image: '', link: '/collections/party' },
-  { id: '4', name: 'Váy', image: '', link: '/collections/dresses' },
-  { id: '5', name: 'Áo sơ mi', image: '', link: '/collections/tops' },
-  { id: '6', name: 'Trẻ em', image: '', link: '/collections/kids' },
-];
+export default async function Home() {
+  const supabase = await createClient();
+  
+  // Fetch products from Supabase
+  const { data: productsData, error: productsError } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(8);
 
-export default function Home() {
+  // Fetch unique genders for categories
+  const { data: genderData, error: genderError } = await supabase
+    .from('products')
+    .select('gender');
+
+  // Use products from Supabase or fallback to sample data
+  const newProducts: Product[] = productsData || [];
+
+  // Create categories array from products data
+  let categories: Category[] = [];
+  
+  if (genderData && !genderError) {
+    // Get unique genders to use as categories
+    const uniqueGenders = [...new Set(genderData.map(p => p.gender).filter(Boolean))];
+    
+    // Map genders to readable category names
+    const genderMap: Record<string, string> = {
+      'nam': 'Nam',
+      'nu': 'Nữ', 
+      'nữ': 'Nữ',
+      'kids': 'Trẻ em',
+      'unisex': 'Unisex'
+    };
+    
+    categories = uniqueGenders.map((gender, index) => ({
+      id: String(index + 1),
+      name: genderMap[gender.toLowerCase()] || gender,
+      image: '',
+      link: `/collections/${gender.toLowerCase()}`
+    }));
+  } else {
+    // Fallback to default categories if fetch fails
+    categories = [
+      { id: '1', name: 'Áo len', image: '', link: '/collections/knitwear' },
+      { id: '2', name: 'Áo khoác', image: '', link: '/collections/coats' },
+      { id: '3', name: 'Đồ dự tiệc', image: '', link: '/collections/party' },
+      { id: '4', name: 'Váy', image: '', link: '/collections/dresses' },
+      { id: '5', name: 'Áo sơ mi', image: '', link: '/collections/tops' },
+      { id: '6', name: 'Trẻ em', image: '', link: '/collections/kids' },
+    ];
+  }
+  
   return (
     <div className="min-h-screen">
       <Header />
@@ -34,45 +77,12 @@ export default function Home() {
       <main>
         <HeroBanner />
         
-        <ProductGrid title="Sản phẩm mới về" products={newProducts} />
+        <ProductGrid title="Sản phẩm mới về" products={productsData || []} />
         
-        <CategoryGrid categories={categories} />
+        {/* <CategoryGrid categories={categories} /> */}
         
         {/* Editor's Picks Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2 text-center">
-              Gợi ý của biên tập viên
-            </h2>
-            <p className="text-gray-600 text-center mb-8">
-              Những lựa chọn đặc biệt được tuyển chọn kỹ lưỡng
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Pick 1 */}
-              <div className="group relative overflow-hidden rounded-lg cursor-pointer">
-                <div className="aspect-video bg-linear-to-br from-red-100 to-pink-100 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <h3 className="text-3xl font-bold text-gray-900 mb-2">Bộ sưu tập Giáng sinh</h3>
-                    <p className="text-gray-700">Từ tiệc tùng đến những buổi gói quà</p>
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all" />
-              </div>
-              
-              {/* Pick 2 */}
-              <div className="group relative overflow-hidden rounded-lg cursor-pointer">
-                <div className="aspect-video bg-linear-to-br from-blue-100 to-teal-100 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <h3 className="text-3xl font-bold text-gray-900 mb-2">Đồ len Alpine</h3>
-                    <p className="text-gray-700">Áo len sang trọng cho mùa đông</p>
-                  </div>
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all" />
-              </div>
-            </div>
-          </div>
-        </section>
+
         
         {/* Sustainability Section */}
         <section className="py-16 bg-green-50">

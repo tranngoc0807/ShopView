@@ -3,7 +3,7 @@ import ProductCard from './ProductCard';
 
 interface ProductGridProps {
   title: string;
-  products: Product[];
+  products: unknown;
 }
 
 export default function ProductGrid({ title, products }: ProductGridProps) {
@@ -15,7 +15,7 @@ export default function ProductGrid({ title, products }: ProductGridProps) {
         </h2>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {products.map((product) => (
+          {Array.isArray(products) && products.map((product  ) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
